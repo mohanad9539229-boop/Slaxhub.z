@@ -11,8 +11,8 @@
             
             :root {
                 --bg-base: #060101;
-                --bg-surface: rgba(18, 5, 5, 0.55);
-                --bg-card: rgba(28, 6, 6, 0.4);
+                --bg-surface: rgba(18, 5, 5, 0.65);
+                --bg-card: rgba(28, 6, 6, 0.5);
                 --primary: #ff2222; /* أحمر ساطع */
                 --primary-glow: rgba(255, 34, 34, 0.5);
                 --accent: #990000; /* أحمر غامق */
@@ -48,17 +48,15 @@
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                opacity: 0.35; /* شفافية مخصصة لراحة القراءة */
+                opacity: 0.45; /* تمت زيادة الشفافية والسطوع لجعل الفيديو الأساس لجمالية الموقع */
             }
             .video-overlay {
                 position: absolute;
                 inset: 0;
-                background: linear-gradient(180deg, rgba(6, 1, 1, 0.8) 0%, rgba(6, 1, 1, 0.95) 100%);
+                background: linear-gradient(180deg, rgba(6, 1, 1, 0.75) 0%, rgba(6, 1, 1, 0.92) 100%);
             }
 
-            /* تأثيرات الخلفية والشهب */
-            canvas#space { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-            .noise { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+            .noise { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
             
             /* زر كتم وتشغيل الصوت */
             .sound-control-btn {
@@ -281,9 +279,6 @@
             </svg>
         </button>
 
-        <!-- نجوم متحركة بالخلفية -->
-        <canvas id="space" width="414" height="616"></canvas>
-
         <nav id="nav" class="scrolled"> 
             <a href="#" class="nav-logo">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -306,7 +301,7 @@
             <div class="hero-badge"><span class="badge-dot"></span>SLAX LUA ENGINE</div>
             <h1 class="hero-title"><em>SLAX HUB</em></h1>
 
-            <p class="hero-desc">محرك السكربتات الأكثر تقدمًا وخفة وغير قابل للكشف. تم تطويره بدقة فائقة للتصدي المثالي والأداء السلس على الهواتف بشكل أساسي ودون تأخير.</p>
+            <p class="hero-desc">محرك السكربتات الأكثر تقدمًا وخفة وغير قابل للكشف. تم تطويره بدقة فائقة للضرب التلقائي المثالي والأداء السلس على الهواتف بشكل أساسي ودون تأخير.</p>
             <div class="hero-action-area">
                 <div class="hero-btns"> 
                     <a href="#loader" class="btn-primary">
@@ -317,7 +312,7 @@
                     </a>
                     <a href="#features" class="btn-ghost">استكشف المميزات</a>
                 </div> 
-                <a href="https://discord.gg/D2SrcgpnT2" target="_blank" class="btn-discord-wide">
+                <a href="https://discord.gg/vQdbCBpST5" target="_blank" class="btn-discord-wide">
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"></path></svg>
                     انضم إلى سيرفر الديسكورد
                 </a>
@@ -328,7 +323,7 @@
             <div class="stats-inner">
                 <div class="stat reveal visible"> 
                     <span class="stat-num"><span class="count" data-t="99">99</span><span class="stat-unit">%</span></span>
-                    <span class="stat-label">دقة التصدي التلقائي (Parry)</span>
+                    <span class="stat-label">دقة الضرب التلقائي (Hit)</span>
                 </div>
                 <div class="stat reveal visible" style="transition-delay: 0.1s;"> 
                     <span class="stat-num">0<span class="stat-unit">ms</span></span>
@@ -356,8 +351,8 @@
                     <svg class="feat-ico" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                     </svg>
-                    <div class="feat-name">تصدي تلقائي خارق (Auto Parry)</div>
-                    <p class="feat-desc">يستخدم حسابات متطورة لـ AssemblyLinearVelocity للتنبؤ والصد بشكل مثالي، متجاهلاً التأخر تماماً.</p>
+                    <div class="feat-name">ضرب تلقائي خارق (Auto Hit / Strike)</div>
+                    <p class="feat-desc">يستخدم حسابات متطورة لـ AssemblyLinearVelocity للتنبؤ والضرب بشكل مثالي، متجاهلاً التأخر تماماً.</p>
                 </div>
                 <div class="feat-card reveal" style="transition-delay: 0.1s;"> 
                     <span class="feat-num">02</span>
@@ -365,7 +360,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z M15 9l-6 6 M9 9l6 6"></path>
                     </svg>
                     <div class="feat-name">مكافحة الـ Curve والسبام</div>
-                    <p class="feat-desc">تعديل مسافة ذكي وديناميكي. يكتشف الكرات المنحنية تلقائياً ويقوم بالصد السريع عند المسافات القريبة بمرونة متناهية.</p>
+                    <p class="feat-desc">تعديل مسافة ذكي وديناميكي. يكتشف الكرات المنحنية تلقائياً ويقوم بالضرب السريع عند المسافات القريبة بمرونة متناهية.</p>
                 </div>
                 <div class="feat-card reveal" style="transition-delay: 0.2s;"> 
                     <span class="feat-num">03</span>
@@ -399,11 +394,11 @@
                 <div class="reveal" style="transition-delay: 0.2s;"> 
                     <span class="section-tag">تحليل المنطق البرمجي</span>
                     <h3 class="sc-title">آلية عمل <em>المحرك الفتاك</em></h3>
-                    <p class="sc-body">بدلاً من الاعتماد على التحقق البسيط من المسافة، يقوم محرك SLAX بفك تشفير حزم البيانات في الوقت الفعلي وتوقع الأحداث قبل وصولها وعرضها على شاشتك لضمان أداء لا يُهزم.</p>
+                    <p class="sc-body">بدلاً من الاعتماد على التحقق البسيط من المسافة، يقوم محرك SLAX بفك تشفير حزم البيانات في الوقت الفعلي وتوقع الضرب وتوجيهه بدقة قبل وصول الكرة وعرضها على شاشتك لضمان أداء لا يُهزم.</p>
                     
                     <div class="check-list">
-                        <div class="check-item"><span class="check-mark">✓</span> قراءة سرعة الكرات والحزم بشكل فوري</div>
-                        <div class="check-item"><span class="check-mark">✓</span> نظام ذكي لتعويض تأخر الشبكة (Ping)</div>
+                        <div class="check-item"><span class="check-mark">✓</span> قراءة سرعة الكرات والحزم بشكل فوري للتوجيه</div>
+                        <div class="check-item"><span class="check-mark">✓</span> نظام ذكي لتعويض تأخر الشبكة (Ping) والضرب السريع</div>
                         <div class="check-item"><span class="check-mark">✓</span> تخطي الحمايات الفعال والصامت</div>
                         <div class="check-item"><span class="check-mark">✓</span> واجهة استخدام تفاعلية فائقة السرعة</div>
                     </div>
@@ -533,45 +528,6 @@
                 });
             });
             countObs.observe(document.querySelector('.stats-band'));
-    
-            // --- خلفية الفضاء والجزيئات الحمراء والبرتقالية المضيئة ---
-            const canvas = document.getElementById('space');
-            const ctx = canvas.getContext('2d');
-            let w, h;
-            function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
-            window.addEventListener('resize', resize); resize();
-            
-            // النجوم تم تعديل ألوانها لتناسب الطابع الأحمر الغامق
-            const stars = Array(150).fill().map(() => ({ x: Math.random()*w, y: Math.random()*h, r: Math.random()*1.5 + 0.5, a: Math.random() }));
-            let shootingStars = [];
-    
-            function drawSpace() {
-                ctx.clearRect(0, 0, w, h);
-                stars.forEach(s => {
-                    ctx.globalAlpha = Math.abs(Math.sin(Date.now()*0.001 + s.a*10)) * 0.7 + 0.1;
-                    ctx.fillStyle = 'rgba(255, 60, 60, 0.8)'; // جزيئات بلون أحمر متوهج
-                    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
-                    s.y -= 0.1; if(s.y < 0) s.y = h;
-                });
-                if(Math.random() < 0.02) { 
-                    shootingStars.push({
-                        x: Math.random() * w * 1.5, y: (Math.random() * h) - (h * 0.3), 
-                        len: Math.random() * 80 + 40, speed: Math.random() * 10 + 15, opacity: Math.random() * 0.5 + 0.5 
-                    });
-                }
-                shootingStars.forEach((ss, i) => {
-                    ctx.globalAlpha = ss.opacity;
-                    const grad = ctx.createLinearGradient(ss.x, ss.y, ss.x - ss.len, ss.y - ss.len);
-                    grad.addColorStop(0, '#fff'); grad.addColorStop(0.2, '#ff3333'); grad.addColorStop(1, 'transparent');
-                    ctx.beginPath(); ctx.moveTo(ss.x, ss.y); ctx.lineTo(ss.x - ss.len, ss.y - ss.len);
-                    ctx.strokeStyle = grad; ctx.lineWidth = 2; ctx.stroke();
-                    ss.x += ss.speed; ss.y += ss.speed;
-                    ss.opacity -= 0.01; 
-                    if(ss.opacity <= 0) shootingStars.splice(i, 1);
-                });
-                requestAnimationFrame(drawSpace);
-            }
-            drawSpace();
     
             // --- نظام رادار SLAX الأحمر المتقدم ---
             const rCanvas = document.getElementById('radarCanvas');
