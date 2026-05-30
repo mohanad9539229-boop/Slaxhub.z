@@ -1,0 +1,666 @@
+```html
+<html><head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SLAX HUB | Premium Script Hub</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Outfit:wght@300;400;600;800&amp;family=Space+Grotesk:wght@400;600;700&amp;display=swap" rel="stylesheet">
+        <style>
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+            
+            :root {
+                --bg-base: #060101;
+                --bg-surface: rgba(18, 5, 5, 0.55);
+                --bg-card: rgba(28, 6, 6, 0.4);
+                --primary: #ff2222; /* أحمر ساطع */
+                --primary-glow: rgba(255, 34, 34, 0.5);
+                --accent: #990000; /* أحمر غامق */
+                --accent-glow: rgba(153, 0, 0, 0.5);
+                --gradient-aurora: linear-gradient(135deg, #ff2222, #990000, #ff5555);
+                --text-main: #f8fafc;
+                --text-muted: #cbd5e1;
+                --border-light: rgba(255, 255, 255, 0.08);
+                --border-focus: rgba(255, 34, 34, 0.4);
+            }
+    
+            /* تصميم تمرير سلس */
+            html { scroll-behavior: smooth; overflow-x: hidden; }
+            body { background: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; cursor: none; }
+            ::selection { background: var(--primary-glow); color: #fff; }
+    
+            /* مؤشر ماوس مخصص تفاعلي */
+            #cursor { position: fixed; width: 6px; height: 6px; background: #fff; border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.15s, height 0.15s; box-shadow: 0 0 10px var(--primary); }
+            #cursor-ring { position: fixed; width: 40px; height: 40px; border: 1px solid var(--primary-glow); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
+            
+            /* خلفية الفيديو الفاخرة لورا الكلام والشرح */
+            .video-background {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+                overflow: hidden;
+                pointer-events: none;
+            }
+            .video-background video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                opacity: 0.35; /* شفافية مخصصة لراحة القراءة */
+            }
+            .video-overlay {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(180deg, rgba(6, 1, 1, 0.8) 0%, rgba(6, 1, 1, 0.95) 100%);
+            }
+
+            /* تأثيرات الخلفية والشهب */
+            canvas#space { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+            .noise { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+            
+            /* زر كتم وتشغيل الصوت */
+            .sound-control-btn {
+                position: fixed;
+                bottom: 2rem;
+                left: 2rem;
+                z-index: 999;
+                background: rgba(255, 34, 34, 0.1);
+                border: 1px solid var(--primary);
+                color: #fff;
+                padding: 1rem;
+                border-radius: 50%;
+                cursor: pointer;
+                box-shadow: 0 0 15px var(--primary-glow);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s;
+                backdrop-filter: blur(10px);
+            }
+            .sound-control-btn:hover {
+                transform: scale(1.1);
+                background: var(--primary);
+                color: #000;
+            }
+
+            /* التنقل */
+            nav { position: fixed; top: 0; width: 100%; z-index: 100; padding: 1.5rem 4rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-bottom: 1px solid transparent; }
+            nav.scrolled { background: rgba(6, 1, 1, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-light); padding: 1rem 4rem; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+            
+            .nav-logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.15em; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 0.8rem; }
+            .nav-logo svg { filter: drop-shadow(0 0 12px var(--primary-glow)); animation: floatLogo 3s ease-in-out infinite; }
+            
+            .nav-links { display: flex; gap: 3rem; list-style: none; }
+            .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; transition: all 0.3s; position: relative; }
+            .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0%; height: 2px; background: var(--gradient-aurora); transition: width 0.3s ease; }
+            .nav-links a:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.4); }
+            .nav-links a:hover::after { width: 100%; }
+            
+            .nav-cta { padding: 0.7rem 1.8rem; border-radius: 8px; background: rgba(255, 34, 34, 0.05); border: 1px solid var(--border-focus); color: var(--primary); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; transition: all 0.3s; backdrop-filter: blur(10px); position: relative; overflow: hidden; }
+            .nav-cta::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: left 0.5s; }
+            .nav-cta:hover::before { left: 100%; }
+            .nav-cta:hover { background: var(--primary); color: #000; box-shadow: 0 0 25px var(--primary-glow); border-color: transparent; }
+    
+            section { position: relative; z-index: 10; }
+    
+            /* قسم الواجهة الرئيسية */
+            .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 2rem; position: relative; }
+            
+            .blob { position: absolute; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 2; opacity: 0.4; mix-blend-mode: screen; }
+            .blob-1 { width: 600px; height: 600px; background: var(--primary-glow); top: 0%; left: 0%; animation: floatBlob 15s ease-in-out infinite; }
+            .blob-2 { width: 500px; height: 500px; background: var(--accent-glow); bottom: -10%; right: 0%; animation: floatBlob 18s ease-in-out infinite reverse; }
+    
+            .hero-badge { display: inline-flex; align-items: center; gap: 0.8rem; padding: 0.5rem 1.5rem; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%); backdrop-filter: blur(10px); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-main); margin-bottom: 2.5rem; animation: fadeUp 0.8s ease forwards; opacity: 0; box-shadow: 0 0 30px rgba(255, 34, 34, 0.1); }
+            .badge-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 12px var(--primary), 0 0 20px var(--primary); animation: pulse 2s infinite; }
+    
+            .hero-title { font-family: 'Outfit', sans-serif; font-size: clamp(4rem, 9vw, 8.5rem); font-weight: 800; line-height: 0.95; color: transparent; background: linear-gradient(180deg, #fff 20%, #888 100%); -webkit-background-clip: text; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards 0.2s; letter-spacing: -0.02em; }
+            .hero-title em { font-style: normal; background: var(--gradient-aurora); -webkit-background-clip: text; color: transparent; filter: drop-shadow(0 0 30px rgba(255, 34, 34, 0.4)); padding-right: 10px; }
+            
+            .hero-desc { font-size: 1.1rem; color: var(--text-muted); max-width: 550px; margin: 0 auto 3.5rem; line-height: 1.7; opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s; font-weight: 400; direction: rtl; }
+            
+            /* أزرار التشغيل والربط */
+            .hero-action-area { display: flex; flex-direction: column; gap: 1rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s; width: fit-content; margin: 0 auto; }
+            .hero-btns { display: flex; gap: 1.5rem; }
+            
+            .btn-primary { padding: 1.2rem 3rem; border-radius: 12px; background: var(--text-main); color: var(--bg-base); font-size: 0.85rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; transition: all 0.3s; display: flex; align-items: center; gap: 10px; }
+            .btn-primary:hover { background: var(--primary); box-shadow: 0 0 40px var(--primary-glow); transform: translateY(-3px) scale(1.02); color: #fff; }
+            
+            .btn-ghost { padding: 1.2rem 3rem; border-radius: 12px; border: 1px solid var(--border-light); background: rgba(255,255,255,0.02); color: var(--text-main); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; backdrop-filter: blur(10px); transition: all 0.3s; }
+            .btn-ghost:hover { border-color: var(--primary); background: rgba(255, 34, 34, 0.05); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    
+            .btn-discord-wide { width: 100%; padding: 1.1rem; border-radius: 12px; border: 1px solid rgba(88, 101, 242, 0.4); background: rgba(88, 101, 242, 0.1); color: #fff; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; backdrop-filter: blur(10px); transition: all 0.3s; }
+            .btn-discord-wide:hover { background: #5865F2; border-color: #5865F2; box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4); transform: translateY(-3px); }
+    
+            /* قسم الإحصائيات المتفاعل */
+            .stats-band { margin-top: -4rem; padding: 4rem 0; background: linear-gradient(90deg, transparent, var(--bg-surface), transparent); border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); backdrop-filter: blur(20px); z-index: 11; position: relative; }
+            .stats-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; padding: 0 2rem; direction: rtl; }
+            .stat { text-align: center; position: relative; }
+            .stat:not(:last-child)::after { content: ''; position: absolute; left: -1rem; top: 20%; height: 60%; width: 1px; background: linear-gradient(180deg, transparent, var(--border-light), transparent); }
+            .stat-num { font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; font-weight: 700; color: #fff; line-height: 1; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+            .stat-unit { color: var(--primary); font-size: 1.5rem; margin-left: 2px; }
+            .stat-label { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.8rem; display: block; }
+    
+            /* المميزات */
+            .features-wrap { padding: 10rem 2rem; max-width: 1300px; margin: 0 auto; }
+            .section-head { text-align: center; margin-bottom: 5rem; }
+            .section-tag { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; background: var(--gradient-aurora); -webkit-background-clip: text; color: transparent; display: inline-block; margin-bottom: 1rem; }
+            .section-title { font-family: 'Outfit', sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 800; color: #fff; line-height: 1.1; }
+            .section-title em { font-style: normal; color: var(--primary); text-shadow: 0 0 30px var(--primary-glow); }
+    
+            /* بطاقات المميزات ثلاثية الأبعاد */
+            .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
+            .feat-card { background: linear-gradient(180deg, var(--bg-card) 0%, rgba(15, 5, 5, 0.2) 100%); border: 1px solid var(--border-light); border-radius: 20px; padding: 3.5rem 2.5rem; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: box-shadow 0.4s, border 0.4s, transform 0.1s ease-out; direction: rtl; }
+            .feat-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%); opacity: 0; transition: opacity 0.4s; z-index: 1; }
+            .feat-card::after { content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 1px; background: var(--gradient-aurora); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.5s; }
+            .feat-card:hover::before, .feat-card:hover::after { opacity: 1; }
+            .feat-card:hover { box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 40px rgba(255, 34, 34, 0.15); z-index: 10; }
+            .feat-ico { width: 48px; height: 48px; margin-bottom: 2.5rem; color: var(--primary); position: relative; z-index: 2; filter: drop-shadow(0 0 10px var(--primary-glow)); }
+            .feat-num { font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--text-muted); opacity: 0.3; position: absolute; top: 2.5rem; left: 2.5rem; z-index: 2; }
+            .feat-name { font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 1rem; position: relative; z-index: 2; }
+            .feat-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.8; position: relative; z-index: 2; }
+    
+            /* قسم عرض الرادار والصورة الحصرية */
+            .showcase-wrap { padding: 8rem 2rem; background: radial-gradient(circle at center, rgba(35, 15, 15, 0.3) 0%, transparent 60%); border-top: 1px solid var(--border-light); }
+            .showcase-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+            
+            /* حاوية الصورة وعرض الرادار المزدوج */
+            .visuals-container { display: flex; flex-direction: column; gap: 2rem; width: 100%; max-width: 500px; margin: 0 auto; }
+            
+            .showcase-visual { position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 30px; border: 1px solid rgba(255, 34, 34, 0.2); background: #040101; backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: inset 0 0 100px rgba(0,0,0,0.8), 0 0 50px rgba(255, 34, 34, 0.1); }
+            .grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 40px 40px; animation: gridPan 30s linear infinite; }
+            
+            /* حاوية صورة العرض المرفقة بأسلوب سايبربانك */
+            .image-showcase-card {
+                position: relative;
+                width: 100%;
+                border-radius: 20px;
+                border: 1px solid rgba(255, 34, 34, 0.3);
+                overflow: hidden;
+                box-shadow: 0 15px 35px rgba(0,0,0,0.7), 0 0 30px rgba(255, 34, 34, 0.15);
+                transition: transform 0.3s ease;
+            }
+            .image-showcase-card:hover {
+                transform: translateY(-5px);
+                border-color: var(--primary);
+            }
+            .image-showcase-card img {
+                width: 100%;
+                height: auto;
+                display: block;
+                filter: brightness(0.95) contrast(1.05);
+            }
+            .image-showcase-badge {
+                position: absolute;
+                bottom: 1rem;
+                right: 1rem;
+                background: rgba(0, 0, 0, 0.75);
+                border: 1px solid var(--primary);
+                color: #fff;
+                padding: 0.4rem 1rem;
+                border-radius: 8px;
+                font-family: 'Space Grotesk';
+                font-size: 0.75rem;
+                letter-spacing: 0.1em;
+                backdrop-filter: blur(5px);
+            }
+
+            .sc-title { font-family: 'Outfit', sans-serif; font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 800; color: #fff; margin-bottom: 1.5rem; line-height: 1.1; }
+            .sc-body { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; margin-bottom: 2.5rem; font-weight: 300; direction: rtl; }
+            
+            .check-list { direction: rtl; }
+            .check-item { display: flex; align-items: center; gap: 1.2rem; font-size: 1rem; font-weight: 600; color: var(--text-main); margin-bottom: 1.2rem; }
+            .check-mark { width: 28px; height: 28px; border-radius: 8px; background: rgba(255, 34, 34, 0.1); border: 1px solid var(--primary); display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 0.9rem; box-shadow: 0 0 15px var(--primary-glow); }
+    
+            /* كود برمجية التحميل */
+            .loader-wrap { padding: 6rem 2rem 10rem; }
+            .code-block-wrapper { max-width: 850px; margin: 0 auto; background: linear-gradient(180deg, var(--bg-card) 0%, rgba(10, 2, 2, 0.8) 100%); border: 1px solid var(--border-light); border-radius: 16px; overflow: hidden; backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(255, 34, 34, 0.05); }
+            
+            .code-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: rgba(0,0,0,0.4); border-bottom: 1px solid var(--border-light); }
+            .code-title { display: flex; align-items: center; gap: 0.7rem; font-size: 0.95rem; font-weight: 600; color: #fff; letter-spacing: 0.05em; }
+            .code-title svg { color: var(--primary); }
+            
+            .copy-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); color: var(--text-muted); cursor: pointer; transition: all 0.3s; padding: 0.5rem; border-radius: 8px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+            .copy-btn:hover { color: var(--primary); background: rgba(255, 34, 34, 0.15); border-color: var(--primary); transform: scale(1.05); }
+            .copy-btn.copied { color: #4ade80; background: rgba(74, 222, 128, 0.1); border-color: #4ade80; }
+            
+            .code-content { padding: 2rem 1.5rem; overflow-x: auto; }
+            .code-content pre { margin: 0; font-family: 'Space Grotesk', monospace; font-size: 0.95rem; line-height: 1.8; color: var(--text-main); }
+            
+            /* تمييز السكربت */
+            .hl-func { color: #f87171; font-weight: 600; }
+            .hl-string { color: #4ade80; }
+            .hl-punct { color: var(--text-muted); }
+    
+            /* الحركات الرياضية */
+            @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+            @keyframes floatBlob { 0%, 100% { transform: translateY(0) scale(1) rotate(0deg); } 50% { transform: translateY(-50px) scale(1.1) rotate(10deg); } }
+            @keyframes floatLogo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+            @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.3); } }
+            @keyframes gridPan { 0% { background-position: 0 0; } 100% { background-position: 40px 40px; } }
+    
+            /* المظهر وتأثيرات الإطارات */
+            .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+            .reveal.visible { opacity: 1; transform: translateY(0); }
+            
+            footer { padding: 4rem; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; background: #030000; z-index: 10; position: relative; }
+            .foot-logo { font-family: 'Space Grotesk', font-weight: 800; font-size: 1.2rem; letter-spacing: 0.2em; color: var(--text-main); }
+    
+            @media (max-width: 960px) {
+                nav { padding: 1rem 2rem; }
+                .nav-links { display: none; }
+                .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 3rem; }
+                .showcase-inner { grid-template-columns: 1fr; }
+                .stat:not(:last-child)::after { display: none; }
+                footer { flex-direction: column; gap: 1rem; text-align: center; }
+                .code-content pre { font-size: 0.85rem; }
+            }
+        </style>
+    </head>
+    
+    <body>
+        <!-- مؤشر الفأرة التفاعلي المخصص باللون الأحمر -->
+        <div id="cursor"></div>
+        <div id="cursor-ring" style="left: 0px; top: 0px;"></div>
+        <div class="noise"></div>
+        
+        <!-- خلفية الفيديو المخصصة والمدمجة -->
+        <div class="video-background">
+            <video autoplay loop muted playsinline id="bgVideo">
+                <source src="https://www.image2url.com/r2/default/videos/1780141656933-bb5d11bb-d92f-4200-b182-ba0b827d2f4a.mp4" type="video/mp4">
+            </video>
+            <div class="video-overlay"></div>
+        </div>
+
+        <!-- زر التحكم بالصوت -->
+        <button class="sound-control-btn" id="soundToggle" title="تشغيل/إيقاف الصوت">
+            <!-- أيقونة كتم الصوت الافتراضية -->
+            <svg id="soundIcon" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77zM4.17 9H2v6h2.17L9 19.83V4.17L4.17 9z"/>
+            </svg>
+        </button>
+
+        <!-- نجوم متحركة بالخلفية -->
+        <canvas id="space" width="414" height="616"></canvas>
+
+        <nav id="nav" class="scrolled"> 
+            <a href="#" class="nav-logo">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L13.5 9.5L21 8L14.5 13L17 21L12 16L7 21L9.5 13L3 8L10.5 9.5L12 2Z" fill="#ff2222"></path>
+                </svg>
+                SLAX HUB
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#features">المميزات</a></li>
+                <li><a href="#showcase">المحرك</a></li>
+                <li><a href="#loader">الكود</a></li>
+            </ul> 
+            <a href="#loader" class="nav-cta">احصل على السكربت</a>
+        </nav>
+
+        <section class="hero">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="hero-badge"><span class="badge-dot"></span>SLAX LUA ENGINE</div>
+            <h1 class="hero-title"><em>SLAX HUB</em></h1>
+
+            <p class="hero-desc">محرك السكربتات الأكثر تقدمًا وخفة وغير قابل للكشف. تم تطويره بدقة فائقة للتصدي المثالي والأداء السلس على الهواتف بشكل أساسي ودون تأخير.</p>
+            <div class="hero-action-area">
+                <div class="hero-btns"> 
+                    <a href="#loader" class="btn-primary">
+                        احصل على السكربت
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </a>
+                    <a href="#features" class="btn-ghost">استكشف المميزات</a>
+                </div> 
+                <a href="https://discord.gg/D2SrcgpnT2" target="_blank" class="btn-discord-wide">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"></path></svg>
+                    انضم إلى سيرفر الديسكورد
+                </a>
+            </div>
+        </section>
+
+        <div class="stats-band">
+            <div class="stats-inner">
+                <div class="stat reveal visible"> 
+                    <span class="stat-num"><span class="count" data-t="99">99</span><span class="stat-unit">%</span></span>
+                    <span class="stat-label">دقة التصدي التلقائي (Parry)</span>
+                </div>
+                <div class="stat reveal visible" style="transition-delay: 0.1s;"> 
+                    <span class="stat-num">0<span class="stat-unit">ms</span></span>
+                    <span class="stat-label">تأخير الاستجابة والتنفيذ</span>
+                </div>
+                <div class="stat reveal visible" style="transition-delay: 0.2s;"> 
+                    <span class="stat-num"><span class="count" data-t="15">15</span><span class="stat-unit">+</span></span>
+                    <span class="stat-label">تخطي القدرات المكتشفة</span>
+                </div>
+                <div class="stat reveal visible" style="transition-delay: 0.3s;"> 
+                    <span class="stat-num">100<span class="stat-unit">%</span></span>
+                    <span class="stat-label">متوافق بالكامل مع الجوال</span>
+                </div>
+            </div>
+        </div>
+
+        <section id="features" class="features-wrap">
+            <div class="section-head reveal"> 
+                <span class="section-tag">أبرز التقنيات</span>
+                <h2 class="section-title">قوة برمجية مصممة للـ <em>تميز</em></h2>
+            </div>
+            <div class="feat-grid">
+                <div class="feat-card reveal"> 
+                    <span class="feat-num">01</span>
+                    <svg class="feat-ico" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    <div class="feat-name">تصدي تلقائي خارق (Auto Parry)</div>
+                    <p class="feat-desc">يستخدم حسابات متطورة لـ AssemblyLinearVelocity للتنبؤ والصد بشكل مثالي، متجاهلاً التأخر تماماً.</p>
+                </div>
+                <div class="feat-card reveal" style="transition-delay: 0.1s;"> 
+                    <span class="feat-num">02</span>
+                    <svg class="feat-ico" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z M15 9l-6 6 M9 9l6 6"></path>
+                    </svg>
+                    <div class="feat-name">مكافحة الـ Curve والسبام</div>
+                    <p class="feat-desc">تعديل مسافة ذكي وديناميكي. يكتشف الكرات المنحنية تلقائياً ويقوم بالصد السريع عند المسافات القريبة بمرونة متناهية.</p>
+                </div>
+                <div class="feat-card reveal" style="transition-delay: 0.2s;"> 
+                    <span class="feat-num">03</span>
+                    <svg class="feat-ico" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    <div class="feat-name">واجهة تفاعلية مرنة للأجهزة</div>
+                    <p class="feat-desc">يعمل بثبات متكامل على جميع مشغلات الأندرويد مثل (Delta, Wave) مع مظهر متميز واستجابة كاملة للمس.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="showcase" class="showcase-wrap">
+            <div class="showcase-inner">
+                <!-- الرادار وصورة المعاينة منسقة بشكل سايبربانك رائع -->
+                <div class="visuals-container reveal">
+                    <!-- الصورة المطلوبة مدمجة بأسلوب SLAX ذو الإطار المتوهج -->
+                    <div class="image-showcase-card">
+                        <img src="https://i.ibb.co/6Rxrd1Bw/IMG-4977.jpg" alt="SLAX HUB Premium Interface">
+                        <div class="image-showcase-badge">SLAX SCREENSHOT</div>
+                    </div>
+
+                    <!-- رادار تفاعلي متناسق بالكامل باللون الأحمر -->
+                    <div class="showcase-visual">
+                        <div class="grid-bg"></div>
+                        <canvas id="radarCanvas" width="500" height="500" style="position:relative; z-index:5; width: 100%; height: auto;"></canvas>
+                        <div style="position:absolute; bottom:1.5rem; right:1.5rem; font-family:'Space Grotesk'; font-size:0.75rem; font-weight:700; letter-spacing:0.2em; color:var(--primary); z-index:5; text-shadow: 0 0 10px var(--primary-glow);">SLAX // RADAR ACTIVE</div>
+                    </div>
+                </div>
+                
+                <div class="reveal" style="transition-delay: 0.2s;"> 
+                    <span class="section-tag">تحليل المنطق البرمجي</span>
+                    <h3 class="sc-title">آلية عمل <em>المحرك الفتاك</em></h3>
+                    <p class="sc-body">بدلاً من الاعتماد على التحقق البسيط من المسافة، يقوم محرك SLAX بفك تشفير حزم البيانات في الوقت الفعلي وتوقع الأحداث قبل وصولها وعرضها على شاشتك لضمان أداء لا يُهزم.</p>
+                    
+                    <div class="check-list">
+                        <div class="check-item"><span class="check-mark">✓</span> قراءة سرعة الكرات والحزم بشكل فوري</div>
+                        <div class="check-item"><span class="check-mark">✓</span> نظام ذكي لتعويض تأخر الشبكة (Ping)</div>
+                        <div class="check-item"><span class="check-mark">✓</span> تخطي الحمايات الفعال والصامت</div>
+                        <div class="check-item"><span class="check-mark">✓</span> واجهة استخدام تفاعلية فائقة السرعة</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="loader" class="loader-wrap">
+            <div class="section-head reveal" style="margin-bottom: 3.5rem;"> 
+                <span class="section-tag">البدء السريع</span>
+                <h2 class="section-title">برنامج تشغيل <em>SLAX HUB</em></h2>
+                <p class="hero-desc" style="margin-top: 1.5rem; margin-bottom: 0; text-align: center;">انسخ الكود البرمجي أدناه وضعه في مشغلك لتجربة الأداء الأقوى على الإطلاق.</p>
+            </div>
+            
+            <div class="code-block-wrapper reveal" style="transition-delay: 0.2s;">
+                <div class="code-header">
+                    <div class="code-title">
+                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        سكربت التشغيل الرسمي
+                    </div>
+                    <button class="copy-btn" id="copyBtn" title="نسخ إلى الحافظة">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="code-content"> 
+                    <!-- السكربت المطلوب الذي تم تحديثه بنجاح -->
+                    <pre><code id="scriptText"><span class="hl-func">loadstring</span><span class="hl-punct">(</span><span class="hl-func">game</span><span class="hl-punct">:</span><span class="hl-func">HttpGet</span><span class="hl-punct">(</span><span class="hl-string">"https://raw.githubusercontent.com/mohanad9539229-boop/Yut/refs/heads/main/script.lua"</span><span class="hl-punct">))()</span></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="foot-logo">SLAX HUB</div>
+            <div style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">© 2026 تم التطوير لتقديم الأداء الأفضل</div>
+        </footer>
+
+        <script>
+            // --- التحكم بالماوس ومؤشر الحركة ---
+            const cursor = document.getElementById('cursor'), ring = document.getElementById('cursor-ring');
+            let mx = 0, my = 0, rx = 0, ry = 0;
+            document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
+            (function anim() { rx += (mx - rx) * 0.2; ry += (my - ry) * 0.2; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(anim); })();
+            
+            // تفاعلات الأزرار والماوس
+            document.querySelectorAll('a, button, .feat-card, .copy-btn, .image-showcase-card').forEach(el => {
+                el.addEventListener('mouseenter', () => { 
+                    ring.style.width = '60px'; ring.style.height = '60px'; 
+                    ring.style.background = 'rgba(255, 34, 34, 0.1)';
+                    ring.style.borderColor = 'var(--primary)'; 
+                });
+                el.addEventListener('mouseleave', () => { 
+                    ring.style.width = '40px'; ring.style.height = '40px'; 
+                    ring.style.background = 'transparent';
+                    ring.style.borderColor = 'var(--primary-glow)'; 
+                });
+            });
+    
+            // تدوير البطاقات ثلاثي الأبعاد بشكل ديناميكي ومبهر
+            document.querySelectorAll('.feat-card').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -6; 
+                    const rotateY = ((x - centerX) / centerX) * 6;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+                });
+            });
+    
+            // --- آلية نسخ الكود بنقرة واحدة ---
+            const copyBtn = document.getElementById('copyBtn');
+            copyBtn.addEventListener('click', () => {
+                const codeToCopy = `loadstring(game:HttpGet("https://raw.githubusercontent.com/mohanad9539229-boop/Yut/refs/heads/main/script.lua"))()`;
+                
+                // حل لنسخ النصوص يدعم بيئة iframe بمرونة وسهولة
+                const el = document.createElement('textarea');
+                el.value = codeToCopy;
+                document.body.appendChild(el);
+                el.select();
+                try {
+                    document.execCommand('copy');
+                    const originalIcon = copyBtn.innerHTML;
+                    copyBtn.innerHTML = `<svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>`;
+                    copyBtn.classList.add('copied');
+                    
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalIcon;
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                } catch (err) {
+                    console.error('خطأ أثناء نسخ الكود: ', err);
+                }
+                document.body.removeChild(el);
+            });
+    
+            // --- تأثيرات شريط التنقل العلوي ---
+            window.addEventListener('scroll', () => document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50));
+    
+            // --- تأثير كشف العناصر تدريجياً أثناء التمرير ---
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+            }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    
+            // --- حركة عداد الإحصائيات الفائقة ---
+            const countObs = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if(e.isIntersecting) {
+                        document.querySelectorAll('.count').forEach(el => {
+                            const target = +el.getAttribute('data-t');
+                            let c = 0;
+                            const int = setInterval(() => { c += target/40; el.innerText = Math.ceil(c); if(c>=target){ el.innerText=target; clearInterval(int);} }, 30);
+                        });
+                        countObs.unobserve(e.target);
+                    }
+                });
+            });
+            countObs.observe(document.querySelector('.stats-band'));
+    
+            // --- خلفية الفضاء والجزيئات الحمراء والبرتقالية المضيئة ---
+            const canvas = document.getElementById('space');
+            const ctx = canvas.getContext('2d');
+            let w, h;
+            function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+            window.addEventListener('resize', resize); resize();
+            
+            // النجوم تم تعديل ألوانها لتناسب الطابع الأحمر الغامق
+            const stars = Array(150).fill().map(() => ({ x: Math.random()*w, y: Math.random()*h, r: Math.random()*1.5 + 0.5, a: Math.random() }));
+            let shootingStars = [];
+    
+            function drawSpace() {
+                ctx.clearRect(0, 0, w, h);
+                stars.forEach(s => {
+                    ctx.globalAlpha = Math.abs(Math.sin(Date.now()*0.001 + s.a*10)) * 0.7 + 0.1;
+                    ctx.fillStyle = 'rgba(255, 60, 60, 0.8)'; // جزيئات بلون أحمر متوهج
+                    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
+                    s.y -= 0.1; if(s.y < 0) s.y = h;
+                });
+                if(Math.random() < 0.02) { 
+                    shootingStars.push({
+                        x: Math.random() * w * 1.5, y: (Math.random() * h) - (h * 0.3), 
+                        len: Math.random() * 80 + 40, speed: Math.random() * 10 + 15, opacity: Math.random() * 0.5 + 0.5 
+                    });
+                }
+                shootingStars.forEach((ss, i) => {
+                    ctx.globalAlpha = ss.opacity;
+                    const grad = ctx.createLinearGradient(ss.x, ss.y, ss.x - ss.len, ss.y - ss.len);
+                    grad.addColorStop(0, '#fff'); grad.addColorStop(0.2, '#ff3333'); grad.addColorStop(1, 'transparent');
+                    ctx.beginPath(); ctx.moveTo(ss.x, ss.y); ctx.lineTo(ss.x - ss.len, ss.y - ss.len);
+                    ctx.strokeStyle = grad; ctx.lineWidth = 2; ctx.stroke();
+                    ss.x += ss.speed; ss.y += ss.speed;
+                    ss.opacity -= 0.01; 
+                    if(ss.opacity <= 0) shootingStars.splice(i, 1);
+                });
+                requestAnimationFrame(drawSpace);
+            }
+            drawSpace();
+    
+            // --- نظام رادار SLAX الأحمر المتقدم ---
+            const rCanvas = document.getElementById('radarCanvas');
+            const rctx = rCanvas.getContext('2d');
+            let angle = 0;
+            let radarTargets = [];
+    
+            function generateTargets() {
+                radarTargets = [];
+                const num = Math.floor(Math.random() * 12) + 1;
+                for(let i=0; i<num; i++) {
+                    radarTargets.push({
+                        angle: Math.random() * Math.PI * 2, dist: Math.random() * 180 + 30,
+                        id: Math.floor(Math.random()*999).toString().padStart(3, '0'),
+                        vel: Math.floor(Math.random()*150 + 50), opacity: 0
+                    });
+                }
+            }
+            generateTargets();
+            setInterval(generateTargets, 6000);
+    
+            function drawRadar() {
+                rctx.clearRect(0, 0, 500, 500);
+                const cx = 250, cy = 250;
+                
+                rctx.strokeStyle = 'rgba(255, 34, 34, 0.15)';
+                rctx.lineWidth = 1;
+                [50, 100, 150, 200].forEach(r => { rctx.beginPath(); rctx.arc(cx, cy, r, 0, Math.PI*2); rctx.stroke(); });
+                
+                rctx.beginPath(); rctx.moveTo(cx, cy-220); rctx.lineTo(cx, cy+220);
+                rctx.moveTo(cx-220, cy); rctx.lineTo(cx+220, cy);
+                rctx.strokeStyle = 'rgba(255, 34, 34, 0.1)'; rctx.stroke();
+    
+                angle = (angle + 0.03) % (Math.PI * 2);
+                rctx.save(); rctx.translate(cx, cy); rctx.rotate(angle);
+                const grad = rctx.createConicGradient(0, 0, 0);
+                grad.addColorStop(0, 'rgba(255, 34, 34, 0)'); grad.addColorStop(0.15, 'rgba(255, 34, 34, 0.3)');
+                grad.addColorStop(0.2, 'rgba(255, 34, 34, 0.8)'); grad.addColorStop(0.201, 'rgba(255, 34, 34, 0)');
+                rctx.fillStyle = grad;
+                rctx.beginPath(); rctx.arc(0, 0, 220, 0, Math.PI*2); rctx.fill();
+                rctx.restore();
+    
+                radarTargets.forEach(t => {
+                    let diff = angle - t.angle;
+                    while(diff < 0) diff += Math.PI*2; while(diff > Math.PI*2) diff -= Math.PI*2;
+                    if(diff < 0.1) t.opacity = 1; else t.opacity = Math.max(0, t.opacity - 0.015);
+    
+                    if(t.opacity > 0.05) {
+                        let tx = cx + Math.cos(t.angle) * t.dist;
+                        let ty = cy + Math.sin(t.angle) * t.dist;
+                        
+                        rctx.globalAlpha = t.opacity;
+                        rctx.beginPath(); rctx.arc(tx, ty, 4, 0, Math.PI*2);
+                        rctx.fillStyle = '#fff'; rctx.shadowBlur = 15; rctx.shadowColor = '#ff2222'; rctx.fill();
+                        
+                        rctx.shadowBlur = 0;
+                        rctx.fillStyle = `rgba(255, 34, 34, ${t.opacity})`;
+                        rctx.font = "10px 'Space Grotesk'";
+                        rctx.fillText(`[${t.id}]`, tx + 8, ty - 5);
+                        rctx.fillStyle = `rgba(255, 255, 255, ${t.opacity * 0.7})`;
+                        rctx.fillText(`VEL: ${t.vel}`, tx + 8, ty + 7);
+                        rctx.globalAlpha = 1;
+                    }
+                });
+                requestAnimationFrame(drawRadar);
+            }
+            drawRadar();
+
+            // --- التحكم بصوت خلفية الفيديو ---
+            const bgVideo = document.getElementById('bgVideo');
+            const soundToggle = document.getElementById('soundToggle');
+            const soundIcon = document.getElementById('soundIcon');
+
+            soundToggle.addEventListener('click', () => {
+                if (bgVideo.muted) {
+                    bgVideo.muted = false;
+                    // تغيير الأيقونة لتوضيح تفعيل الصوت
+                    soundIcon.innerHTML = `<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>`;
+                    soundToggle.style.background = 'rgba(74, 222, 128, 0.15)';
+                    soundToggle.style.borderColor = '#4ade80';
+                } else {
+                    bgVideo.muted = true;
+                    // أيقونة كتم الصوت
+                    soundIcon.innerHTML = `<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77zM4.17 9H2v6h2.17L9 19.83V4.17L4.17 9z"/>`;
+                    soundToggle.style.background = 'rgba(255, 34, 34, 0.1)';
+                    soundToggle.style.borderColor = 'var(--primary)';
+                }
+            });
+        </script>
+    </body></html>
+
+```
